@@ -28,4 +28,9 @@ public class RoleService {
         role.setName(roleName);
         return roleRepository.save(role);
     }
+
+    public Role findById(Long id) {
+        return roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find role with id " + id));
+    }
+
 }
