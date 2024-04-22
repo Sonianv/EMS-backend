@@ -26,5 +26,14 @@ public class EmployeeWorkDay {
     private LocalDateTime startTime;
     @Column(name = "end_time")
     private LocalDateTime endTime;
+    @Column(name = "break_time")
+    private float breakTime;
+    @Enumerated(EnumType.STRING)
+    @Column
+    private Status status;
+
+    public enum Status {
+        BELOW_EXPECTED, AS_EXPECTED, ABOVE_EXPECTED, IN_PROGRESS
+    }
 
 }

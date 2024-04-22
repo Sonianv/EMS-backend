@@ -23,4 +23,8 @@ public class EmployeeService {
         Employee savedEmployee = employeeRepository.save(employee);
         return EmployeeConverter.convertToEmployeeDto(savedEmployee);
     }
+
+    public Employee findById(Long id) {
+        return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find employee with id " + id));
+    }
 }
