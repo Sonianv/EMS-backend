@@ -14,10 +14,12 @@ public class EmployeeWorkDayConverter {
         return new EmployeeWorkDayDto(
                 employeeWorkDay.getId(),
                 employeeWorkDay.getEmployee().getId(),
-                employeeWorkDay.getStartTime(),
-                employeeWorkDay.getEndTime(),
+                employeeWorkDay.getDay(),
+                employeeWorkDay.getStart(),
+                employeeWorkDay.getEnd(),
                 employeeWorkDay.getBreakTime(),
-                employeeWorkDay.getStatus()
+                employeeWorkDay.getStatus(),
+                employeeWorkDay.getWorkedHours()
         );
     }
 
@@ -26,24 +28,33 @@ public class EmployeeWorkDayConverter {
         Employee employee = employeeService.findById(employeeWorkDayDto.getEmployeeId());
 
         employeeWorkDay.setEmployee(employee);
-        employeeWorkDay.setStartTime(employeeWorkDayDto.getStartTime());
-        employeeWorkDay.setEndTime(employeeWorkDayDto.getEndTime());
+        employeeWorkDay.setDay(employeeWorkDayDto.getDay());
+        employeeWorkDay.setStart(employeeWorkDayDto.getStart());
+        employeeWorkDay.setEnd(employeeWorkDayDto.getEnd());
         employeeWorkDay.setBreakTime(employeeWorkDayDto.getBreakTime());
         int expectedHours = employee.getProgram();
+        employeeWorkDay.setWorkedHours(getWorkedHours(employeeWorkDayDto));
         employeeWorkDay.setStatus(getStatusForEmployeeWorkDay(employeeWorkDayDto, expectedHours));
         return employeeWorkDay;
     }
 
     private static Status getStatusForEmployeeWorkDay(EmployeeWorkDayDto employeeWorkDayDto, int expectedHours) {
-        if (employeeWorkDayDto.getEndTime() == null) {
+        if (employeeWorkDayDto.getEnd() == null) {
             return EmployeeWorkDay.Status.IN_PROGRESS;
         }
-        float workedHours = ChronoUnit.HOURS.between(employeeWorkDayDto.getStartTime(), employeeWorkDayDto.getEndTime()) - employeeWorkDayDto.getBreakTime();
+        Double workedHours = getWorkedHours(employeeWorkDayDto);
         if (workedHours > expectedHours) {
             return EmployeeWorkDay.Status.ABOVE_EXPECTED;
         } else if (workedHours < expectedHours) {
             return EmployeeWorkDay.Status.BELOW_EXPECTED;
         }
         return EmployeeWorkDay.Status.AS_EXPECTED;
+    }
+
+    private static Double getWorkedHours(EmployeeWorkDayDto employeeWorkDayDto) {
+        if (employeeWorkDayDto.getEnd() == null) {
+            return null;
+        }
+        return ChronoUnit.MINUTES.between(employeeWorkDayDto.getStart(), employeeWorkDayDto.getEnd()) / 60.0 - employeeWorkDayDto.getBreakTime();
     }
 }
