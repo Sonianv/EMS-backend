@@ -1,14 +1,14 @@
 package com.ems.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeDto {
@@ -21,4 +21,5 @@ public class EmployeeDto {
     private LocalDate startDate;
     private LocalDate endDate;
     private int program;
+    private String password;
 }

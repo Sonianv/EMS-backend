@@ -3,32 +3,34 @@ package com.ems.converter;
 import com.ems.dto.EmployeeDto;
 import com.ems.model.Employee;
 import com.ems.service.RoleService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class EmployeeConverter {
 
     public static EmployeeDto convertToEmployeeDto(Employee employee) {
-        return new EmployeeDto(
-                employee.getId(),
-                employee.getFirstName(),
-                employee.getLastName(),
-                employee.getRole().getId(),
-                employee.getEmail(),
-                employee.getStartDate(),
-                employee.getEndDate(),
-                employee.getProgram()
-        );
+        return EmployeeDto.builder()
+                .id(employee.getId())
+                .firstName(employee.getFirstName())
+                .lastName(employee.getLastName())
+                .roleId(employee.getRole().getId())
+                .email(employee.getEmail())
+                .startDate(employee.getStartDate())
+                .endDate(employee.getEndDate())
+                .program(employee.getProgram())
+                .build();
     }
 
-    public static Employee convertToEmployee(EmployeeDto employeeDto, RoleService roleService) {
-        Employee employee = new Employee();
-        employee.setFirstName(employeeDto.getFirstName());
-        employee.setLastName(employeeDto.getLastName());
-        employee.setRole(roleService.findById(employeeDto.getRoleId()));
-        employee.setEmail(employeeDto.getEmail());
-        employee.setStartDate(employeeDto.getStartDate());
-        employee.setEndDate(employeeDto.getEndDate());
-        employee.setProgram(employeeDto.getProgram());
-        return employee;
+    public static Employee convertToEmployee(EmployeeDto employeeDto, RoleService roleService, PasswordEncoder passwordEncoder) {
+        return Employee.builder()
+                .firstName(employeeDto.getFirstName())
+                .lastName(employeeDto.getLastName())
+                .role(roleService.findById(employeeDto.getRoleId()))
+                .email(employeeDto.getEmail())
+                .startDate(employeeDto.getStartDate())
+                .endDate(employeeDto.getEndDate())
+                .program(employeeDto.getProgram())
+                .password(passwordEncoder.encode(employeeDto.getPassword()))
+                .build();
     }
 
 }

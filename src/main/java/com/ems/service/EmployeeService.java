@@ -1,30 +1,25 @@
 package com.ems.service;
 
-import com.ems.converter.EmployeeConverter;
-import com.ems.dto.EmployeeDto;
 import com.ems.model.Employee;
 import com.ems.repository.EmployeeRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EmployeeService {
+@RequiredArgsConstructor
+public class EmployeeService implements UserDetailsService {
 
     private final EmployeeRepository employeeRepository;
 
-    private final RoleService roleService;
-
-    public EmployeeService(EmployeeRepository employeeRepository, RoleService roleService) {
-        this.employeeRepository = employeeRepository;
-        this.roleService = roleService;
-    }
-
-    public EmployeeDto addEmployee(EmployeeDto employeeDto) {
-        Employee employee = EmployeeConverter.convertToEmployee(employeeDto, roleService);
-        Employee savedEmployee = employeeRepository.save(employee);
-        return EmployeeConverter.convertToEmployeeDto(savedEmployee);
-    }
-
     public Employee findById(Long id) {
         return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find employee with id " + id));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return employeeRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
