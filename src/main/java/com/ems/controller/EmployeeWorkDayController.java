@@ -34,6 +34,6 @@ public class EmployeeWorkDayController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getEmployeeWorkDayById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(employeeWorkDayService.getEmployeeWorkDay(id), HttpStatus.OK);
+        return new ResponseEntity<>(employeeWorkDayService.getEmployeeWorkDayDto(id), HttpStatus.OK);
     }
 }
