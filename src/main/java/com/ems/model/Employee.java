@@ -45,6 +45,9 @@ public class Employee implements UserDetails {
     @OneToMany(mappedBy = "employee")
     private List<EmployeeTaskTime> employeeTasksTime;
 
+    @OneToMany(mappedBy = "employee")
+    private List<Token> tokens;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.getName().name()));

@@ -17,6 +17,7 @@ public class EmployeeConverter {
                 .startDate(employee.getStartDate())
                 .endDate(employee.getEndDate())
                 .program(employee.getProgram())
+                .password(employee.getPassword())
                 .build();
     }
 
