@@ -55,6 +55,11 @@ public class AuthService {
         tokenRepository.save(token);
         return AuthResponse.builder()
                 .token(jwtToken)
+                .id(employee.getId())
+                .email(employee.getEmail())
+                .firstName(employee.getFirstName())
+                .lastName(employee.getLastName())
+                .roleName(employee.getRole().getName().name())
                 .build();
     }
 
