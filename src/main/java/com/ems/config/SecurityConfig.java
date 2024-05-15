@@ -26,7 +26,8 @@ public class SecurityConfig {
 
     private static final String[] PERMIT_ALL_URL = {
             "api/rest/auth/login",
-            "api/rest/auth/logout"
+            "api/rest/auth/logout",
+            "api/rest/officialHolidays"
     };
 
 
@@ -39,6 +40,7 @@ public class SecurityConfig {
                                 .requestMatchers(PERMIT_ALL_URL)
                                 .permitAll()
                                 .requestMatchers("api/rest/auth/register").hasAuthority(ADMIN.name())
+                                .requestMatchers("api/rest/officialHolidays/new").hasAuthority(ADMIN.name())
                                 .requestMatchers("api/rest/workdays/**").hasAuthority(USER.name())
                                 .anyRequest()
                                 .authenticated()
