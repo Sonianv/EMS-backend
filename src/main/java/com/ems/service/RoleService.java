@@ -5,18 +5,16 @@ import com.ems.model.Role;
 import com.ems.repository.RoleRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
 
 @Service
+@RequiredArgsConstructor
 public class RoleService {
 
     private final RoleRepository roleRepository;
-
-    public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
 
     @PostConstruct
     @Transactional

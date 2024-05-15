@@ -5,6 +5,7 @@ import com.ems.error.InvalidRequestBodyException;
 import com.ems.error.ResourceNotFoundException;
 import com.ems.model.EmployeeWorkDay;
 import com.ems.repository.EmployeeWorkDayRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -16,15 +17,11 @@ import static com.ems.converter.EmployeeWorkDayConverter.convertToEmployeeWorkDa
 import static com.ems.converter.EmployeeWorkDayConverter.convertToEmployeeWorkDayDto;
 
 @Service
+@RequiredArgsConstructor
 public class EmployeeWorkDayService {
 
     private final EmployeeWorkDayRepository employeeWorkDayRepository;
     private final EmployeeService employeeService;
-
-    public EmployeeWorkDayService(EmployeeWorkDayRepository employeeWorkDayRepository, EmployeeService employeeService) {
-        this.employeeWorkDayRepository = employeeWorkDayRepository;
-        this.employeeService = employeeService;
-    }
 
     public EmployeeWorkDayDto addEmployeeWorkDay(EmployeeWorkDayDto employeeWorkDayDto) {
         validateEmployeeWorkDayDto(employeeWorkDayDto);
