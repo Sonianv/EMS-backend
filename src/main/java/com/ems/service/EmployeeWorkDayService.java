@@ -1,10 +1,14 @@
 package com.ems.service;
 
 import com.ems.dto.EmployeeWorkDayDto;
+import com.ems.error.InvalidRequestBodyException;
+import com.ems.error.ResourceNotFoundException;
 import com.ems.model.EmployeeWorkDay;
 import com.ems.repository.EmployeeWorkDayRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,14 +27,19 @@ public class EmployeeWorkDayService {
     }
 
     public EmployeeWorkDayDto addEmployeeWorkDay(EmployeeWorkDayDto employeeWorkDayDto) {
+        validateEmployeeWorkDayDto(employeeWorkDayDto);
         EmployeeWorkDay employeeWorkDay = convertToEmployeeWorkDay(employeeWorkDayDto, employeeService);
         EmployeeWorkDay savedEmployeeWork = employeeWorkDayRepository.save(employeeWorkDay);
         return convertToEmployeeWorkDayDto(savedEmployeeWork);
     }
 
     public EmployeeWorkDayDto updateEmployeeWorkDay(Long id, EmployeeWorkDayDto employeeWorkDayDto) {
+        validateEmployeeWorkDayDto(employeeWorkDayDto);
         EmployeeWorkDay newWorkDay = convertToEmployeeWorkDay(employeeWorkDayDto, employeeService);
         EmployeeWorkDay workDay = getEmployeeWorkDay(id);
+        if (!newWorkDay.getDay().equals(workDay.getDay())) {
+            throw new InvalidRequestBodyException("Cannot change the day of the work day");
+        }
         workDay.update(newWorkDay);
         EmployeeWorkDay updatedEmployeeWork = employeeWorkDayRepository.save(workDay);
         return convertToEmployeeWorkDayDto(updatedEmployeeWork);
@@ -41,7 +50,7 @@ public class EmployeeWorkDayService {
     }
 
     private EmployeeWorkDay getEmployeeWorkDay(Long id) {
-        return employeeWorkDayRepository.findEmployeeWorkDayById(id);
+        return employeeWorkDayRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cannot find employee work day with id " + id));
     }
 
     public Set<EmployeeWorkDayDto> getAllEmployeeWorkDays(Long id) {
@@ -51,5 +60,18 @@ public class EmployeeWorkDayService {
             workDaysDto.add(convertToEmployeeWorkDayDto(workDay));
         }
         return workDaysDto;
+    }
+
+    private void validateEmployeeWorkDayDto(EmployeeWorkDayDto employeeWorkDayDto) {
+        if (isWeekend(employeeWorkDayDto.getDay())) {
+            throw new InvalidRequestBodyException("Cannot add work day on a weekend");
+        } else if (employeeWorkDayDto.getEnd() != null && employeeWorkDayDto.getEnd().isBefore(employeeWorkDayDto.getStart())) {
+            throw new InvalidRequestBodyException("Cannot set end time before start time");
+        }
+    }
+
+    private boolean isWeekend(LocalDate day) {
+        DayOfWeek dayOfWeek = day.getDayOfWeek();
+        return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
     }
 }

@@ -6,6 +6,7 @@ import com.ems.dto.auth.AuthResponse;
 import com.ems.service.AuthService;
 import com.ems.service.LogoutService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AuthController {
     private final LogoutService logoutService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<?> registerEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         return new ResponseEntity<>(authService.addNewEmployee(employeeDto), HttpStatus.CREATED);
     }
 

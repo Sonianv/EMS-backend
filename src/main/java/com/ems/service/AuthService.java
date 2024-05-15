@@ -4,6 +4,8 @@ import com.ems.config.JwtService;
 import com.ems.dto.EmployeeDto;
 import com.ems.dto.auth.AuthRequest;
 import com.ems.dto.auth.AuthResponse;
+import com.ems.error.InvalidRequestBodyException;
+import com.ems.error.ResourceNotFoundException;
 import com.ems.model.Employee;
 import com.ems.model.Token;
 import com.ems.repository.EmployeeRepository;
@@ -30,6 +32,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public EmployeeDto addNewEmployee(EmployeeDto employeeDto) {
+        if (employeeRepository.findByEmail(employeeDto.getEmail()).isPresent()) {
+            throw new InvalidRequestBodyException("An employee with the specified email already exists");
+        }
         Employee employee = convertToEmployee(employeeDto, roleService, passwordEncoder);
         Employee savedEmployee = employeeRepository.save(employee);
         return convertToEmployeeDto(savedEmployee);
@@ -42,7 +47,7 @@ public class AuthService {
                         authRequest.getPassword()
                 )
         );
-        var employee = employeeRepository.findByEmail(authRequest.getEmail()).orElseThrow();
+        var employee = employeeRepository.findByEmail(authRequest.getEmail()).orElseThrow(() -> new ResourceNotFoundException("Cannot find employee with email " + authRequest.getEmail()));
         var jwtToken = jwtService.generateToken(employee);
         revokeAllEmployeeTokens(employee);
         var token = Token.builder()

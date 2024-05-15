@@ -12,7 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static com.ems.model.Role.ERole.ADMIN;
-import static com.ems.model.Role.ERole.USER;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -41,7 +40,6 @@ public class SecurityConfig {
                                 .permitAll()
                                 .requestMatchers("api/rest/auth/register").hasAuthority(ADMIN.name())
                                 .requestMatchers("api/rest/officialHolidays/new").hasAuthority(ADMIN.name())
-                                .requestMatchers("api/rest/workdays/**").hasAuthority(USER.name())
                                 .anyRequest()
                                 .authenticated()
                 )

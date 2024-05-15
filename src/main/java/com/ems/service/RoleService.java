@@ -1,5 +1,6 @@
 package com.ems.service;
 
+import com.ems.error.ResourceNotFoundException;
 import com.ems.model.Role;
 import com.ems.repository.RoleRepository;
 import jakarta.annotation.PostConstruct;
@@ -30,7 +31,7 @@ public class RoleService {
     }
 
     public Role findById(Long id) {
-        return roleRepository.findById(id).orElseThrow(() -> new RuntimeException("Cannot find role with id " + id));
+        return roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cannot find role with id " + id));
     }
 
 }
