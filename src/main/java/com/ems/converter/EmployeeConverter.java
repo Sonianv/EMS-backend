@@ -1,6 +1,7 @@
 package com.ems.converter;
 
 import com.ems.dto.EmployeeDto;
+import com.ems.error.InvalidRequestBodyException;
 import com.ems.model.Employee;
 import com.ems.service.RoleService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,11 @@ public class EmployeeConverter {
     }
 
     public static Employee convertToEmployee(EmployeeDto employeeDto, RoleService roleService, PasswordEncoder passwordEncoder) {
+        if (employeeDto.getEndDate() != null && employeeDto.getStartDate().isAfter(employeeDto.getEndDate())) {
+            throw new InvalidRequestBodyException("Cannot have end date before start date.");
+        } else if (employeeDto.getProgram() == 0) {
+            throw new InvalidRequestBodyException("Program must be specified.");
+        }
         return Employee.builder()
                 .firstName(employeeDto.getFirstName())
                 .lastName(employeeDto.getLastName())

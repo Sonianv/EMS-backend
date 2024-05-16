@@ -2,6 +2,7 @@ package com.ems.controller;
 
 import com.ems.error.InvalidRequestBodyException;
 import com.ems.error.ResourceNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,6 +18,11 @@ import java.util.stream.Collectors;
 public class ExceptionAdvice {
 
     record ErrorDto(String message) {
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<Object> handleException(DataIntegrityViolationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto("The data you entered is invalid."));
     }
 
     @ExceptionHandler

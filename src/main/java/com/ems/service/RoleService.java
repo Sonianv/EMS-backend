@@ -29,7 +29,7 @@ public class RoleService {
     }
 
     public Role findById(Long id) {
-        return roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cannot find role with id " + id));
+        return roleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Role needs to be specified"));
     }
 
 }
