@@ -43,9 +43,6 @@ public class Employee implements UserDetails {
     private List<EmployeeWorkDay> employeeWorkDays;
 
     @OneToMany(mappedBy = "employee")
-    private List<EmployeeTaskTime> employeeTasksTime;
-
-    @OneToMany(mappedBy = "employee")
     private List<Token> tokens;
 
     @Override
