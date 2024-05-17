@@ -27,8 +27,13 @@ public class EmployeeVacationController {
     }
 
     @PutMapping("/status/{id}")
-    public ResponseEntity<?> updateStatusEmployeeWorkDay(@PathVariable("id") Long id, @Valid @RequestBody EmployeeVacationDto employeeVacationDto) {
-        return new ResponseEntity<>(employeeVacationService.updateStatusOfEmployeeVacation(id, employeeVacationDto), HttpStatus.CREATED);
+    public ResponseEntity<?> updateStatusEmployeeWorkDay(@PathVariable("id") Long id, @RequestBody String statusName) {
+        return new ResponseEntity<>(employeeVacationService.updateStatusOfEmployeeVacation(id, statusName), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public ResponseEntity<?> updateStatusEmployeeWorkDay(@PathVariable("employeeId") Long employeeId) {
+        return new ResponseEntity<>(employeeVacationService.getAllEmployeeVacationsByEmployeeId(employeeId), HttpStatus.OK);
     }
 
 }

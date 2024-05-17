@@ -1,9 +1,11 @@
 package com.ems.model;
 
+import com.ems.error.ResourceNotFoundException;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 @Getter
 @Setter
@@ -34,7 +36,11 @@ public class EmployeeVacation {
     }
 
     public enum Status {
-        PENDING, REJECTED, ACCEPTED
+        PENDING, REJECTED, ACCEPTED;
+
+        public static Status findByName(String name) {
+            return Arrays.stream(values()).filter(v -> v.name().equals(name)).findFirst().orElseThrow(() -> new ResourceNotFoundException("Unknown vacation status"));
+        }
     }
 
 }

@@ -59,7 +59,7 @@ public class EmployeeWorkDayService {
         return workDaysDto;
     }
 
-    private void validateEmployeeWorkDayDto(EmployeeWorkDayDto employeeWorkDayDto) {
+    private static void validateEmployeeWorkDayDto(EmployeeWorkDayDto employeeWorkDayDto) {
         if (isWeekend(employeeWorkDayDto.getDay())) {
             throw new InvalidRequestBodyException("Cannot add work day on a weekend");
         } else if (employeeWorkDayDto.getEnd() != null && employeeWorkDayDto.getEnd().isBefore(employeeWorkDayDto.getStart())) {
@@ -67,7 +67,7 @@ public class EmployeeWorkDayService {
         }
     }
 
-    private boolean isWeekend(LocalDate day) {
+    private static boolean isWeekend(LocalDate day) {
         DayOfWeek dayOfWeek = day.getDayOfWeek();
         return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
     }
