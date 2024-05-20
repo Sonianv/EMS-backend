@@ -1,14 +1,15 @@
 package com.ems.converter;
 
-import com.ems.dto.EmployeeVacationDto;
+import com.ems.dto.vacation.EmployeeVacationRequest;
+import com.ems.dto.vacation.EmployeeVacationResponse;
 import com.ems.model.Employee;
 import com.ems.model.EmployeeVacation;
 import com.ems.service.EmployeeService;
 
 public class EmployeeVacationConverter {
 
-    public static EmployeeVacationDto convertToEmployeeVacationDto(EmployeeVacation employeeVacation) {
-        return EmployeeVacationDto.builder()
+    public static EmployeeVacationRequest convertToEmployeeVacationRequest(EmployeeVacation employeeVacation) {
+        return EmployeeVacationRequest.builder()
                 .id(employeeVacation.getId())
                 .employeeId(employeeVacation.getEmployee().getId())
                 .startDate(employeeVacation.getStartDate())
@@ -17,13 +18,28 @@ public class EmployeeVacationConverter {
                 .build();
     }
 
-    public static EmployeeVacation convertToEmployeeVacation(EmployeeVacationDto employeeVacationDto, EmployeeService employeeService) {
-        Employee employee = employeeService.findById(employeeVacationDto.getEmployeeId());
+    public static EmployeeVacation convertToEmployeeVacation(EmployeeVacationRequest employeeVacationRequest, EmployeeService employeeService) {
+        Employee employee = employeeService.findById(employeeVacationRequest.getEmployeeId());
         return EmployeeVacation.builder()
                 .employee(employee)
-                .startDate(employeeVacationDto.getStartDate())
-                .endDate(employeeVacationDto.getEndDate())
-                .status(employeeVacationDto.getStatus())
+                .startDate(employeeVacationRequest.getStartDate())
+                .endDate(employeeVacationRequest.getEndDate())
+                .status(employeeVacationRequest.getStatus())
+                .build();
+    }
+
+
+    public static EmployeeVacationResponse convertToEmployeeVacationResponse(EmployeeVacation employeeVacation, EmployeeService employeeService) {
+        Long employeeId = employeeVacation.getEmployee().getId();
+        Employee employee = employeeService.findById(employeeId);
+        return EmployeeVacationResponse.builder()
+                .id(employeeVacation.getId())
+                .employeeId(employeeId)
+                .employeeFirstName(employee.getFirstName())
+                .employeeLastName(employee.getLastName())
+                .startDate(employeeVacation.getStartDate())
+                .endDate(employeeVacation.getEndDate())
+                .status(employeeVacation.getStatus())
                 .build();
     }
 }

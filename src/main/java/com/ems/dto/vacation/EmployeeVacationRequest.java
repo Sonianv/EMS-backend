@@ -1,17 +1,18 @@
-package com.ems.dto;
+package com.ems.dto.vacation;
 
-import com.ems.model.EmployeeVacation;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+
+import static com.ems.model.EmployeeVacation.Status;
 
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeVacationDto {
+public class EmployeeVacationRequest {
 
     private Long id;
     @NotNull(message = "An employee id must be specified")
@@ -20,5 +21,5 @@ public class EmployeeVacationDto {
     private LocalDate startDate;
     @NotNull(message = "End date must be specified")
     private LocalDate endDate;
-    private EmployeeVacation.Status status;
+    private Status status;
 }

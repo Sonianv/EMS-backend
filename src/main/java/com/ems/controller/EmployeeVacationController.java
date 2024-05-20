@@ -1,6 +1,6 @@
 package com.ems.controller;
 
-import com.ems.dto.EmployeeVacationDto;
+import com.ems.dto.vacation.EmployeeVacationRequest;
 import com.ems.service.EmployeeVacationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +17,23 @@ public class EmployeeVacationController {
     private final EmployeeVacationService employeeVacationService;
 
     @PostMapping("/new")
-    public ResponseEntity<?> addEmployeeWorkDay(@Valid @RequestBody EmployeeVacationDto employeeVacationDto) {
-        return new ResponseEntity<>(employeeVacationService.addEmployeeVacation(employeeVacationDto), HttpStatus.CREATED);
+    public ResponseEntity<?> addEmployeeWorkDay(@Valid @RequestBody EmployeeVacationRequest employeeVacationRequest) {
+        return new ResponseEntity<>(employeeVacationService.addEmployeeVacation(employeeVacationRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateEmployeeWorkDay(@PathVariable("id") Long id, @Valid @RequestBody EmployeeVacationDto employeeVacationDto) {
-        return new ResponseEntity<>(employeeVacationService.updateEmployeeVacation(id, employeeVacationDto), HttpStatus.CREATED);
+    public ResponseEntity<?> updateEmployeeWorkDay(@PathVariable("id") Long id, @Valid @RequestBody EmployeeVacationRequest employeeVacationRequest) {
+        return new ResponseEntity<>(employeeVacationService.updateEmployeeVacation(id, employeeVacationRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/status/{id}")
     public ResponseEntity<?> updateStatusEmployeeWorkDay(@PathVariable("id") Long id, @RequestBody String statusName) {
         return new ResponseEntity<>(employeeVacationService.updateStatusOfEmployeeVacation(id, statusName), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<?> getAllVacationRequestsByStatus(@PathVariable("status") String status) {
+        return new ResponseEntity<>(employeeVacationService.getAllEmployeeVacationsByStatus(status), HttpStatus.OK);
     }
 
     @GetMapping("/employee/{employeeId}")
