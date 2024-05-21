@@ -42,6 +42,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/rest/auth/register").hasAuthority(ADMIN.name())
                                 .requestMatchers("api/rest/officialHolidays/new").hasAuthority(ADMIN.name())
                                 .requestMatchers("api/rest/employee_vacations/status/**").hasAuthority(ADMIN.name())
+                                .requestMatchers("api/rest/employees/**").hasAuthority(ADMIN.name())
                                 .requestMatchers("api/rest/employee_vacations/**").hasAuthority(USER.name())
                                 .anyRequest()
                                 .authenticated()

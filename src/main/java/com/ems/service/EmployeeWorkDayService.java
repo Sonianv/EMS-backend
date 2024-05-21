@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.ems.converter.EmployeeWorkDayConverter.convertToEmployeeWorkDay;
 import static com.ems.converter.EmployeeWorkDayConverter.convertToEmployeeWorkDayDto;
@@ -57,6 +60,15 @@ public class EmployeeWorkDayService {
             workDaysDto.add(convertToEmployeeWorkDayDto(workDay));
         }
         return workDaysDto;
+    }
+
+    public Set<EmployeeWorkDayDto> getAllEmployeeWorkDaysFromMonth(String monthName, int year, Long id) {
+        Month month = Month.valueOf(monthName.toUpperCase());
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate startOfMonth = yearMonth.atDay(1);
+        LocalDate endOfMonth = yearMonth.atEndOfMonth();
+        Set<EmployeeWorkDayDto> allWorkDays = getAllEmployeeWorkDays(id);
+        return allWorkDays.stream().filter(workday -> !(workday.getDay().isBefore(startOfMonth) || workday.getDay().isAfter(endOfMonth))).collect(Collectors.toSet());
     }
 
     private static void validateEmployeeWorkDayDto(EmployeeWorkDayDto employeeWorkDayDto) {
