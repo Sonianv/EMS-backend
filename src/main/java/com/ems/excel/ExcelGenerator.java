@@ -6,11 +6,13 @@ import com.ems.dto.ReportDateDto;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,8 +20,10 @@ import static java.util.Map.Entry;
 
 public class ExcelGenerator {
 
-    public static void generateReport(Map<EmployeeDto, Set<EmployeeWorkDayDto>> employeeWithWorkDaysMap, ReportDateDto reportDateDto) {
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MMMM yyyy");
 
+    public static File generateReport(Map<EmployeeDto, Set<EmployeeWorkDayDto>> employeeWithWorkDaysMap, ReportDateDto reportDateDto) {
+        File report = null;
         try (InputStream fis = ExcelGenerator.class.getResourceAsStream("/templates/report_template.xlsx")) {
             Workbook template = new XSSFWorkbook(fis);
 
@@ -34,8 +38,8 @@ public class ExcelGenerator {
                 EmployeeDto employee = employeeWithWorkDays.getKey();
                 Row row = firstSheet.createRow(rowNumber++);
 
-                setupCell(row, 0, employee.getFirstName(), style, firstSheet);
-                setupCell(row, 1, employee.getLastName(), style, firstSheet);
+                setupCell(row, 0, employee.getLastName(), style, firstSheet);
+                setupCell(row, 1, employee.getFirstName(), style, firstSheet);
                 setupCell(row, 2, calcTotalWorkedHours(employeeWithWorkDays.getValue()), style, firstSheet);
 
                 Sheet employeeSheet = template.cloneSheet(1);
@@ -52,14 +56,21 @@ public class ExcelGenerator {
                     setupCell(workDayRow, 4, workDay.getBreakTime(), style, employeeSheet);
                 }
             }
+            template.removeSheetAt(1);
 
             String fileName = System.getProperty("user.home") + "\\Downloads\\" + "Employee_Report_" + reportDateDto.getMonth() + "_" + reportDateDto.getYear() + ".xlsx";
-            try (FileOutputStream outputStream = new FileOutputStream(fileName)) {
+            report = new File(fileName);
+            if (!report.exists()) {
+                report.createNewFile();
+            }
+            try (FileOutputStream outputStream = new FileOutputStream(report)) {
                 template.write(outputStream);
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return report;
     }
 
     private static void setupCell(Row row, int column, Object value, CellStyle style, Sheet sheet) {
@@ -69,7 +80,7 @@ public class ExcelGenerator {
         } else if (value instanceof Double) {
             cell.setCellValue((Double) value);
         } else if (value instanceof LocalDate) {
-            cell.setCellValue((LocalDate) value);
+            cell.setCellValue(((LocalDate) value).format(formatter));
         } else if (value instanceof LocalTime) {
             cell.setCellValue(value.toString());
         } else {

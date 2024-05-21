@@ -7,10 +7,8 @@ import com.ems.excel.ExcelGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.File;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -19,14 +17,19 @@ public class ReportService {
     private final EmployeeService employeeService;
     private final EmployeeWorkDayService employeeWorkDayService;
 
-    public void generateReport(ReportDateDto reportDateDto) {
+    public File generateReport(ReportDateDto reportDateDto) {
         List<EmployeeDto> employees = employeeService.getAllEmployees();
-        Map<EmployeeDto, Set<EmployeeWorkDayDto>> employeeWithWorkDaysMap = new HashMap<>();
+        var sortedEmployees = employees.stream().sorted(Comparator.comparing(EmployeeDto::getLastName)
+                .thenComparing(EmployeeDto::getFirstName)).toList();
 
-        for (EmployeeDto employee : employees) {
+        Map<EmployeeDto, Set<EmployeeWorkDayDto>> employeeWithWorkDaysMap = new TreeMap<>(Comparator.comparing(EmployeeDto::getLastName)
+                .thenComparing(EmployeeDto::getFirstName));
+        for (EmployeeDto employee : sortedEmployees) {
             Set<EmployeeWorkDayDto> workDays = employeeWorkDayService.getAllEmployeeWorkDaysFromMonth(reportDateDto.getMonth(), reportDateDto.getYear(), employee.getId());
-            employeeWithWorkDaysMap.put(employee, workDays);
+            SortedSet<EmployeeWorkDayDto> sortedWorkDays = new TreeSet<>(Comparator.comparing(EmployeeWorkDayDto::getDay));
+            sortedWorkDays.addAll(workDays);
+            employeeWithWorkDaysMap.put(employee, sortedWorkDays);
         }
-        ExcelGenerator.generateReport(employeeWithWorkDaysMap, reportDateDto);
+        return ExcelGenerator.generateReport(employeeWithWorkDaysMap, reportDateDto);
     }
 }
