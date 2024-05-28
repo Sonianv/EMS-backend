@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.ems.model.Role.ERole.USER;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -30,6 +31,6 @@ public class EmployeeService implements UserDetailsService {
     }
 
     public List<EmployeeDto> getAllEmployees() {
-        return employeeRepository.findAll().stream().map(EmployeeConverter::convertToEmployeeDto).collect(toList());
+        return employeeRepository.findAllByRole_Name(USER).stream().map(EmployeeConverter::convertToEmployeeDto).collect(toList());
     }
 }
