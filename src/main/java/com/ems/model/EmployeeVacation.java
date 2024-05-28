@@ -30,11 +30,14 @@ public class EmployeeVacation {
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
     private Status status;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     public void update(EmployeeVacation employeeVacation) {
         this.startDate = employeeVacation.getStartDate();
         this.endDate = employeeVacation.getEndDate();
         this.status = employeeVacation.getStatus();
+        this.type = employeeVacation.getType();
     }
 
     public enum Status {
@@ -43,6 +46,10 @@ public class EmployeeVacation {
         public static Status findByName(String name) {
             return Arrays.stream(values()).filter(v -> v.name().equals(name)).findFirst().orElseThrow(() -> new ResourceNotFoundException("Unknown vacation status"));
         }
+    }
+
+    public enum Type {
+        SICK, REGULAR
     }
 
 }

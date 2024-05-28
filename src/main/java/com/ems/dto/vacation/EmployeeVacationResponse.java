@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 import static com.ems.model.EmployeeVacation.Status;
+import static com.ems.model.EmployeeVacation.Type;
 
 @Data
 @Builder
@@ -22,4 +23,5 @@ public class EmployeeVacationResponse {
     private LocalDate startDate;
     private LocalDate endDate;
     private Status status;
+    private Type type;
 }

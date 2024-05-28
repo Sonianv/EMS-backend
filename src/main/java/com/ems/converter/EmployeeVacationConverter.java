@@ -15,6 +15,7 @@ public class EmployeeVacationConverter {
                 .startDate(employeeVacation.getStartDate())
                 .endDate(employeeVacation.getEndDate())
                 .status(employeeVacation.getStatus())
+                .type(employeeVacation.getType())
                 .build();
     }
 
@@ -25,6 +26,7 @@ public class EmployeeVacationConverter {
                 .startDate(employeeVacationRequest.getStartDate())
                 .endDate(employeeVacationRequest.getEndDate())
                 .status(employeeVacationRequest.getStatus())
+                .type(employeeVacationRequest.getType())
                 .build();
     }
 
@@ -40,6 +42,7 @@ public class EmployeeVacationConverter {
                 .startDate(employeeVacation.getStartDate())
                 .endDate(employeeVacation.getEndDate())
                 .status(employeeVacation.getStatus())
+                .type(employeeVacation.getType())
                 .build();
     }
 }

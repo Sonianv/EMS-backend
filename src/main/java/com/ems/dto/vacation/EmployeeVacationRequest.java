@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 import static com.ems.model.EmployeeVacation.Status;
+import static com.ems.model.EmployeeVacation.Type;
 
 @Data
 @Builder
@@ -24,4 +25,6 @@ public class EmployeeVacationRequest {
     @NotNull(message = "End date must be specified")
     private LocalDate endDate;
     private Status status;
+    @NotNull(message = "Type must be specified")
+    private Type type;
 }
