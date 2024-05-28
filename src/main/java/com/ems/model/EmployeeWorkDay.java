@@ -2,15 +2,15 @@ package com.ems.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -36,6 +36,7 @@ public class EmployeeWorkDay {
     private Status status;
     @Column(name = "worked_hours")
     private Double workedHours;
+    private String description;
 
     public enum Status {
         BELOW_EXPECTED, AS_EXPECTED, ABOVE_EXPECTED, IN_PROGRESS
@@ -48,5 +49,6 @@ public class EmployeeWorkDay {
         this.breakTime = employeeWorkDay.getBreakTime();
         this.status = employeeWorkDay.getStatus();
         this.workedHours = employeeWorkDay.getWorkedHours();
+        this.description = employeeWorkDay.getDescription();
     }
 }

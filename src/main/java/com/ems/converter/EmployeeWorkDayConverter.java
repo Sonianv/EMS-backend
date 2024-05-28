@@ -11,31 +11,34 @@ import java.time.temporal.ChronoUnit;
 public class EmployeeWorkDayConverter {
 
     public static EmployeeWorkDayDto convertToEmployeeWorkDayDto(EmployeeWorkDay employeeWorkDay) {
-        return new EmployeeWorkDayDto(
-                employeeWorkDay.getId(),
-                employeeWorkDay.getEmployee().getId(),
-                employeeWorkDay.getDay(),
-                employeeWorkDay.getStart(),
-                employeeWorkDay.getEnd(),
-                employeeWorkDay.getBreakTime(),
-                employeeWorkDay.getStatus(),
-                employeeWorkDay.getWorkedHours()
-        );
+        return EmployeeWorkDayDto.builder()
+                .id(employeeWorkDay.getId())
+                .employeeId(employeeWorkDay.getEmployee().getId())
+                .day(employeeWorkDay.getDay())
+                .start(employeeWorkDay.getStart())
+                .end(employeeWorkDay.getEnd())
+                .breakTime(employeeWorkDay.getBreakTime())
+                .status(employeeWorkDay.getStatus())
+                .workedHours(employeeWorkDay.getWorkedHours())
+                .description(employeeWorkDay.getDescription())
+                .build();
+
     }
 
     public static EmployeeWorkDay convertToEmployeeWorkDay(EmployeeWorkDayDto employeeWorkDayDto, EmployeeService employeeService) {
-        EmployeeWorkDay employeeWorkDay = new EmployeeWorkDay();
         Employee employee = employeeService.findById(employeeWorkDayDto.getEmployeeId());
-
-        employeeWorkDay.setEmployee(employee);
-        employeeWorkDay.setDay(employeeWorkDayDto.getDay());
-        employeeWorkDay.setStart(employeeWorkDayDto.getStart());
-        employeeWorkDay.setEnd(employeeWorkDayDto.getEnd());
-        employeeWorkDay.setBreakTime(employeeWorkDayDto.getBreakTime());
         int expectedHours = employee.getProgram();
-        employeeWorkDay.setWorkedHours(getWorkedHours(employeeWorkDayDto));
-        employeeWorkDay.setStatus(getStatusForEmployeeWorkDay(employeeWorkDayDto, expectedHours));
-        return employeeWorkDay;
+
+        return EmployeeWorkDay.builder()
+                .employee(employee)
+                .day(employeeWorkDayDto.getDay())
+                .start(employeeWorkDayDto.getStart())
+                .end(employeeWorkDayDto.getEnd())
+                .breakTime(employeeWorkDayDto.getBreakTime())
+                .workedHours(getWorkedHours(employeeWorkDayDto))
+                .status(getStatusForEmployeeWorkDay(employeeWorkDayDto, expectedHours))
+                .description(employeeWorkDayDto.getDescription())
+                .build();
     }
 
     private static Status getStatusForEmployeeWorkDay(EmployeeWorkDayDto employeeWorkDayDto, int expectedHours) {

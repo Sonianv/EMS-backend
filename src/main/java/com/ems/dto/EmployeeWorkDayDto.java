@@ -3,15 +3,15 @@ package com.ems.dto;
 import com.ems.model.EmployeeWorkDay.Status;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmployeeWorkDayDto {
@@ -26,4 +26,5 @@ public class EmployeeWorkDayDto {
     private float breakTime;
     private Status status;
     private Double workedHours;
+    private String description;
 }
