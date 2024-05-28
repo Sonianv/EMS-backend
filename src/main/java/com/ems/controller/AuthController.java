@@ -35,4 +35,9 @@ public class AuthController {
     public ResponseEntity<?> logout(HttpServletRequest request) {
         return ResponseEntity.ok(logoutService.logout(request));
     }
+
+    @PutMapping("/change_password")
+    public ResponseEntity<String> changePassword(@RequestBody String password, HttpServletRequest request) {
+        return ResponseEntity.ok(authService.changePassword(password, request));
+    }
 }

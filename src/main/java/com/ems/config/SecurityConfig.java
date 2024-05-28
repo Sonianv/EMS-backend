@@ -27,6 +27,7 @@ public class SecurityConfig {
     private static final String[] PERMIT_ALL_URL = {
             "api/rest/auth/login",
             "api/rest/auth/logout",
+            "api/rest/auth/change_password",
             "api/rest/officialHolidays"
     };
 

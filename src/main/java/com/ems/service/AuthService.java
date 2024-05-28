@@ -4,12 +4,14 @@ import com.ems.config.JwtService;
 import com.ems.dto.EmployeeDto;
 import com.ems.dto.auth.AuthRequest;
 import com.ems.dto.auth.AuthResponse;
+import com.ems.error.AuthException;
 import com.ems.error.InvalidRequestBodyException;
 import com.ems.error.ResourceNotFoundException;
 import com.ems.model.Employee;
 import com.ems.model.Token;
 import com.ems.repository.EmployeeRepository;
 import com.ems.repository.TokenRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,6 +40,23 @@ public class AuthService {
         Employee employee = convertToEmployee(employeeDto, roleService, passwordEncoder);
         Employee savedEmployee = employeeRepository.save(employee);
         return convertToEmployeeDto(savedEmployee);
+    }
+
+    public String changePassword(String password, HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        String jwt;
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new AuthException("Invalid token!");
+        }
+        jwt = authHeader.substring(7);
+        var storedToken = tokenRepository.findByToken(jwt).orElseThrow(() -> new AuthException("Invalid token!"));
+        if (storedToken.isExpired() || storedToken.isRevoked()) {
+            throw new AuthException("Cannot change password!");
+        }
+        Employee employee = storedToken.getEmployee();
+        employee.setPassword(passwordEncoder.encode(password));
+        employeeRepository.save(employee);
+        return "Password changed successfully.";
     }
 
     public AuthResponse login(AuthRequest authRequest) {
