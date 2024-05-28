@@ -30,6 +30,21 @@ public class SecurityConfig {
             "api/rest/officialHolidays"
     };
 
+    private static final String[] PERMIT_ADMIN_URL = {
+            "api/rest/auth/register",
+            "api/rest/officialHolidays/new",
+            "api/rest/employees/**",
+            "api/rest/employee_vacations/status/**"
+
+    };
+
+    private static final String[] PERMIT_USER_URL = {
+            "api/rest/employee_vacations/new",
+            "api/rest/employee_vacations/update/**",
+            "api/rest/employee_vacations/employee/**",
+            "api/rest/workdays/**"
+    };
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,11 +54,8 @@ public class SecurityConfig {
                         requests -> requests
                                 .requestMatchers(PERMIT_ALL_URL)
                                 .permitAll()
-                                .requestMatchers("api/rest/auth/register").hasAuthority(ADMIN.name())
-                                .requestMatchers("api/rest/officialHolidays/new").hasAuthority(ADMIN.name())
-                                .requestMatchers("api/rest/employee_vacations/status/**").hasAuthority(ADMIN.name())
-                                .requestMatchers("api/rest/employees/**").hasAuthority(ADMIN.name())
-                                .requestMatchers("api/rest/employee_vacations/**").hasAuthority(USER.name())
+                                .requestMatchers(PERMIT_ADMIN_URL).hasAuthority(ADMIN.name())
+                                .requestMatchers(PERMIT_USER_URL).hasAuthority(USER.name())
                                 .anyRequest()
                                 .authenticated()
                 )

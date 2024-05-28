@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -26,11 +27,13 @@ public class EmployeeController {
     private final ReportService reportService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getAllEmployees() {
         return new ResponseEntity<>(employeeService.getAllEmployees(), HttpStatus.OK);
     }
 
     @PostMapping("/report")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<InputStreamResource> generateReport(@Valid @RequestBody ReportDateDto reportDateDto) throws FileNotFoundException {
         File report = reportService.generateReport(reportDateDto);
         String reportName = report.getName();
