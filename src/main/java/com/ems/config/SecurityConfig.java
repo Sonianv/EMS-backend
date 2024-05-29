@@ -35,7 +35,8 @@ public class SecurityConfig {
             "api/rest/auth/register",
             "api/rest/officialHolidays/new",
             "api/rest/employees/**",
-            "api/rest/employee_vacations/status/**"
+            "api/rest/employee_vacations/status/**",
+            "api/rest/month_end_closing/new"
 
     };
 
@@ -43,7 +44,8 @@ public class SecurityConfig {
             "api/rest/employee_vacations/new",
             "api/rest/employee_vacations/update/**",
             "api/rest/employee_vacations/employee/**",
-            "api/rest/workdays/**"
+            "api/rest/workdays/**",
+            "api/rest/month_end_closing/**"
     };
 
 

@@ -2,6 +2,7 @@ package com.ems.service;
 
 import com.ems.dto.EmployeeWorkDayDto;
 import com.ems.error.InvalidRequestBodyException;
+import com.ems.error.MonthClosedException;
 import com.ems.error.ResourceNotFoundException;
 import com.ems.model.EmployeeWorkDay;
 import com.ems.repository.EmployeeWorkDayRepository;
@@ -25,6 +26,7 @@ public class EmployeeWorkDayService {
 
     private final EmployeeWorkDayRepository employeeWorkDayRepository;
     private final EmployeeService employeeService;
+    private final MonthEndClosingService monthEndClosingService;
 
     public EmployeeWorkDayDto addEmployeeWorkDay(EmployeeWorkDayDto employeeWorkDayDto) {
         validateEmployeeWorkDayDto(employeeWorkDayDto);
@@ -71,11 +73,18 @@ public class EmployeeWorkDayService {
         return allWorkDays.stream().filter(workday -> !(workday.getDay().isBefore(startOfMonth) || workday.getDay().isAfter(endOfMonth))).collect(Collectors.toSet());
     }
 
-    private static void validateEmployeeWorkDayDto(EmployeeWorkDayDto employeeWorkDayDto) {
+    private void validateEmployeeWorkDayDto(EmployeeWorkDayDto employeeWorkDayDto) {
         if (isWeekend(employeeWorkDayDto.getDay())) {
             throw new InvalidRequestBodyException("Cannot add work day on a weekend");
         } else if (employeeWorkDayDto.getEnd() != null && employeeWorkDayDto.getEnd().isBefore(employeeWorkDayDto.getStart())) {
             throw new InvalidRequestBodyException("Cannot set end time before start time");
+        } else {
+            LocalDate day = employeeWorkDayDto.getDay();
+            int year = day.getYear();
+            Month month = day.getMonth();
+            if (monthEndClosingService.doesMonthEndClosingExist(year, month)) {
+                throw new MonthClosedException("Cannot add/modify work days on month " + month.name() + " anymore as the month-end close has been completed.");
+            }
         }
     }
 
