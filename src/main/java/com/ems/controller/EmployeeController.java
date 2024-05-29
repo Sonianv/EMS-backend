@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.time.Month;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -45,5 +46,11 @@ public class EmployeeController {
                 .headers(headers)
                 .contentType(MediaType.APPLICATION_OCTET_STREAM)
                 .body(inputStreamResource);
+    }
+
+    @GetMapping("/summary/{year}/{month}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> getMonthSummary(@PathVariable("year") int year, @PathVariable("month") Month month) {
+        return new ResponseEntity<>(employeeService.getMonthSummary(year, month), HttpStatus.OK);
     }
 }
