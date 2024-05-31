@@ -43,7 +43,7 @@ public class ExcelGenerator {
                 setupCell(row, 2, calcTotalWorkedHours(employeeWithWorkDays.getValue()), style, firstSheet);
 
                 Sheet employeeSheet = template.cloneSheet(1);
-                template.setSheetName(template.getSheetIndex(employeeSheet), employee.getId() + "_" + employee.getFirstName() + "_" + employee.getLastName());
+                template.setSheetName(template.getSheetIndex(employeeSheet), employee.getFirstName() + "_" + employee.getLastName());
                 Cell employeeCell = employeeSheet.getRow(1).getCell(0);
                 employeeCell.setCellValue(employee.getLastName() + " " + employee.getFirstName());
                 int workDayNumber = 3;

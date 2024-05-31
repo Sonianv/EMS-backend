@@ -41,7 +41,7 @@ public class EmployeeService implements UserDetailsService {
     }
 
     public List<EmployeeSummary> getMonthSummary(int year, Month month) {
-        List<EmployeeDto> employees = employeeRepository.findAllByRole_NameOrderByLastNameAscFirstNameAsc(USER).stream().map(EmployeeConverter::convertToEmployeeDto).toList();
+        List<EmployeeDto> employees = employeeRepository.findAllByRoleNameAndStartDateBefore(USER, year, month.getValue()).stream().map(EmployeeConverter::convertToEmployeeDto).toList();
         List<EmployeeSummary> employeeSummaryList = new ArrayList<>();
 
         LocalDate startDate = LocalDate.of(year, month, 1);

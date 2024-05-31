@@ -3,6 +3,7 @@ package com.ems.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,5 +32,9 @@ public class EmployeeDto {
     private LocalDate endDate;
     private int program;
     @NotNull(message = "Password cannot be blank")
+    @Pattern(
+            regexp = "^(?=.*[0-9]).{6,}$",
+            message = "Password must be at least 6 characters long and contain at least one number"
+    )
     private String password;
 }
